@@ -6,7 +6,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 
 # Load the dataset
-df = pd.read_csv('./dashboard/main_data.csv')
+df = pd.read_csv('./main_data.csv')
 
 # Mengubah kolom 'dteday' menjadi tipe datetime
 df['dteday'] = pd.to_datetime(df['dteday'])
@@ -62,7 +62,7 @@ st.download_button(
     mime="text/csv"
 )
 
-# Visualisasi pertama: Cuaca vs Jumlah Peminjaman Sepeda
+# **Visualisasi pertama: Pengaruh Cuaca Terhadap Jumlah Peminjaman Sepeda**
 st.subheader('Pengaruh Cuaca Terhadap Jumlah Peminjaman Sepeda')
 plt.figure(figsize=(10, 6))
 sns.boxplot(x='weathersit', y='cnt', data=filtered_df)
@@ -71,15 +71,32 @@ plt.xlabel('Cuaca')
 plt.ylabel('Jumlah Peminjaman Sepeda')
 st.pyplot()
 
-# Visualisasi kedua: Hubungan Durasi Peminjaman dengan Fitur Lainnya
+# **Insight pertama:**
+# - Jumlah peminjaman sepeda lebih tinggi pada cuaca cerah dibandingkan dengan hari hujan atau berawan.
+# - Cuaca cerah mendorong orang untuk lebih sering meminjam sepeda, sementara cuaca buruk dapat mengurangi minat peminjaman sepeda.
+
+# **Visualisasi kedua: Hubungan Durasi Peminjaman dengan Fitur Lainnya**
 st.subheader('Durasi Peminjaman Sepeda dan Faktor Lainnya')
 sns.pairplot(filtered_df[['cnt', 'temp', 'hum', 'windspeed', 'season']], diag_kind='kde')
 plt.suptitle('Hubungan Durasi Peminjaman Sepeda dengan Fitur Lainnya', y=1.02)
 st.pyplot()
 
-# Bagian analisis regresi linier (opsional)
-st.subheader('Model Prediksi Jumlah Peminjaman')
+# **Visualisasi ketiga: Rata-rata Jumlah Peminjaman Sepeda Berdasarkan Musim**
+st.subheader('Rata-rata Jumlah Peminjaman Sepeda Berdasarkan Musim')
+season_avg = filtered_df.groupby('season')['cnt'].mean().reset_index()
+plt.figure(figsize=(10, 6))
+sns.barplot(x='season', y='cnt', data=season_avg)
+plt.title('Rata-rata Jumlah Peminjaman Sepeda Berdasarkan Musim')
+plt.xlabel('Musim')
+plt.ylabel('Rata-rata Jumlah Peminjaman')
+st.pyplot()
 
+# **Insight kedua:**
+# - Jumlah peminjaman sepeda cenderung lebih tinggi pada musim semi dan panas, dibandingkan dengan musim gugur dan dingin.
+# - Cuaca yang lebih hangat mendorong penggunaan sepeda lebih sering.
+
+# **Bagian analisis regresi linier (opsional)**
+st.subheader('Model Prediksi Jumlah Peminjaman')
 X = filtered_df[['temp', 'hum', 'windspeed', 'season']]
 y = filtered_df['cnt']
 
@@ -93,12 +110,17 @@ model.fit(X_train, y_train)
 # Evaluasi model
 st.write(f"Model R^2 pada data test: {model.score(X_test, y_test)}")
 
-# Kesimpulan
+# **Kesimpulan**
 st.subheader('Kesimpulan')
 st.write("""
-Dari visualisasi dan analisis, dapat disimpulkan bahwa cuaca memiliki pengaruh yang signifikan terhadap jumlah peminjaman sepeda. 
-Pada cuaca yang cerah, jumlah peminjaman lebih tinggi dibandingkan dengan hari hujan atau berawan.
+Berdasarkan analisis yang dilakukan, berikut adalah kesimpulan yang didapat pada analisis:
 
-Faktor-faktor seperti suhu dan kelembapan mempengaruhi durasi peminjaman sepeda, 
-dengan peminjaman yang lebih lama cenderung terjadi pada suhu yang lebih rendah dan kelembapan yang moderat.
+**1. Pengaruh Cuaca Terhadap Jumlah Peminjaman Sepeda:**
+    Cuaca memainkan peran penting dalam jumlah peminjaman sepeda. Pada hari cerah, jumlah peminjaman lebih tinggi dibandingkan dengan hari hujan atau berawan. Ini menunjukkan bahwa cuaca cerah mendorong orang untuk lebih sering meminjam sepeda.
+
+**2. Faktor yang Mempengaruhi Durasi Peminjaman Sepeda:**
+      Beberapa faktor yang mempengaruhi durasi peminjaman sepeda termasuk suhu, kelembapan, dan musim. Durasi peminjaman cenderung lebih lama pada suhu yang lebih rendah dan kelembapan yang moderat.
+
+**3. Model Prediksi Jumlah Peminjaman Sepeda:**
+    Model regresi linier yang dibangun menggunakan fitur suhu, kelembapan, kecepatan angin, dan musim menunjukkan bahwa fitur-fitur ini dapat digunakan untuk memprediksi jumlah peminjaman sepeda dengan tingkat akurasi yang cukup baik (R² = 0.5348). Meskipun model ini masih memiliki ruang untuk perbaikan, hasil ini memberikan wawasan yang berguna untuk perencanaan dan pengelolaan sistem penyewaan sepeda.
 """)
