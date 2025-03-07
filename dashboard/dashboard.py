@@ -76,10 +76,18 @@ st.pyplot()
 # - Cuaca cerah mendorong orang untuk lebih sering meminjam sepeda, sementara cuaca buruk dapat mengurangi minat peminjaman sepeda.
 
 # **Visualisasi kedua: Hubungan Durasi Peminjaman dengan Fitur Lainnya**
+# **Visualisasi kedua: Hubungan Durasi Peminjaman dengan Fitur Lainnya**
 st.subheader('Durasi Peminjaman Sepeda dan Faktor Lainnya')
-sns.pairplot(filtered_df[['cnt', 'temp', 'hum', 'windspeed', 'season']], diag_kind='kde')
-plt.suptitle('Hubungan Durasi Peminjaman Sepeda dengan Fitur Lainnya', y=1.02)
-st.pyplot()
+
+# Create pairplot
+pairplot_fig = sns.pairplot(filtered_df[['cnt', 'temp', 'hum', 'windspeed', 'season']], diag_kind='kde')
+
+# Title adjustment and pass the figure to Streamlit
+pairplot_fig.fig.suptitle('Hubungan Durasi Peminjaman Sepeda dengan Fitur Lainnya', y=1.02)
+
+# Now pass the figure to Streamlit using st.pyplot
+st.pyplot(pairplot_fig.fig)
+
 
 # **Visualisasi ketiga: Rata-rata Jumlah Peminjaman Sepeda Berdasarkan Musim**
 st.subheader('Rata-rata Jumlah Peminjaman Sepeda Berdasarkan Musim')
