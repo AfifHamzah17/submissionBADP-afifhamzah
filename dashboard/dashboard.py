@@ -6,7 +6,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 
 # Load the dataset
-df = pd.read_csv('./main_data.csv')
+df = pd.read_csv('./dashboard/main_data.csv')
 
 # Mengubah kolom 'dteday' menjadi tipe datetime
 df['dteday'] = pd.to_datetime(df['dteday'])
