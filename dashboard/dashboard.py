@@ -28,7 +28,7 @@ st.markdown("""
 # ========================================================
 # Fungsi Memuat Data dari main_data.csv
 # ========================================================
-@st.cache_data
+@st.cache
 def load_data():
     # Memuat data dari file main_data.csv (hasil gabungan day_df dan hour_df)
     df = pd.read_csv("main_data.csv", parse_dates=['dteday'])
