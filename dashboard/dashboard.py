@@ -31,7 +31,7 @@ st.markdown("""
 @st.cache
 def load_data():
     # Memuat data dari file main_data.csv (hasil gabungan day_df dan hour_df)
-    df = pd.read_csv("main_data.csv", parse_dates=['dteday'])
+    df = pd.read_csv("./dashboard/main_data.csv", parse_dates=['dteday'])
     # Mapping untuk kolom season dan weathersit agar lebih informatif
     season_mapping = {1: 'Spring', 2: 'Summer', 3: 'Fall', 4: 'Winter'}
     weather_mapping = {
